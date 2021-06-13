@@ -15,7 +15,7 @@
 
 - Github: https://github.com/MilesCranmer/symbolic_deep_learning
 
-4. Complex Systems in Cosmology: “The Antennae” Case Study:   https://link.springer.com/content/pdf/10.1007%2F978-3-642-02469-6_65.pdf
+4.
 
 5. some posters reference (all computational topics) : https://iacs.stonybrook.edu/research/theme2cs
 
@@ -25,7 +25,7 @@
 
 7. more on CA:
 
-- Self-Organized Criticality in Astrophysics : https://github.com/SocSIM/SocSIM, https://www.arxiv-vanity.com/papers/1403.6528/
+- Self-Organized Criticality in Astrophysics : https://github.com/SocSIM/SocSIM, https://www.arxiv-vanity.com/papers/1403.6528/, https://link.springer.com/article/10.1007/s11214-018-0489-2#Sec21
 
 - Modelling Galaxies: Cellular Automata and Percolation
 
