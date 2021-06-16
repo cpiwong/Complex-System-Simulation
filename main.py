@@ -62,11 +62,11 @@ def propagation(grid):
             check = False
 
             for neighbour in neighbours:
-                if neighbour.current_age > 0:
+                if neighbour.current_age == 7:
 
                     # x is the formation probability, has to be determined yet
                     x = random.random()
-                    if x < 0.1:
+                    if x < 0.2:
                         cell.next_age = 7
                         check = True
 
@@ -87,7 +87,7 @@ def updateGrid(grid):
 
 
 # Initialize random stars first
-for i in range(10):
+for i in range(50):
     ring = random.choice(grid.rings)
     cell = random.choice(ring.children)
 
@@ -107,7 +107,7 @@ for ring in grid.rings:
 
 # Propagate and rotate
 new_grid = grid
-for i in tqdm(range(100)):
+for i in tqdm(range(10)):
     temp_grid = propagation(new_grid)
     new_grid = step(temp_grid)
 
