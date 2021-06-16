@@ -24,7 +24,7 @@ class CircularGrid:
             for cell in ring.children:
                 self.beforestep(cell)
 
-    def announce_beforestep(self):
+    def announce_step(self):
         """" Call the step function for every cell"""
 
         # check if there is a beforestepfunction defined
