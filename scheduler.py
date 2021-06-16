@@ -28,7 +28,7 @@ class Scheduler:
             self.grid.announce_step()
 
             # self.iteration_callback()
-            self.history.append(self.get_snapshot())
+            self.history = np.concatenate((self.history, self.get_snapshot()), axis=None)
 
         return
 
