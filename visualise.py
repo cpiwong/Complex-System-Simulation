@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
+from tqdm import tqdm
+
+REGEN_TIME = 50
 
 
 class Visualise:
@@ -26,21 +29,27 @@ class Visualise:
         self.constant = np.ones(len(self.rads))
 
     def update(self, timestep):
-            print(timestep)
-            self.ax.clear()
-            self.ax.set_ylim([0, self.grid.NUM_OF_RINGS])
-
-            for index, row in self.df[(self.df.t == timestep) & (self.df.age == 50)].iterrows():
-                print(timestep, index)
-                self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], "blue")
+        self.ax.clear()
+        self.ax.set_ylim([0, self.grid.NUM_OF_RINGS])
+        for index, row in self.df[
+            (self.df.t == timestep) & (self.df.age == 50)
+        ].iterrows():
+            age = row["age"]
+            color = (
+                255 / REGEN_TIME * (REGEN_TIME - age),
+                255 / REGEN_TIME * (REGEN_TIME - age),
+                255 / REGEN_TIME * (REGEN_TIME - age),
+            )
+            # print(color)
+            self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], color)
 
     def animate(self, df):
         self.df = df
         frames = df["t"].max()
         print("TEST!")
         ani = FuncAnimation(self.fig, self.update, frames)
-        ani.save('video.mp4')
-    
+        ani.save("animation.gif", writer="PillowWriter", fps=10)
+
     def print_grid(self):
         # print out custom grid lines if enables
         for i in range(self.grid.NUM_OF_RINGS + 2):
@@ -54,13 +63,10 @@ class Visualise:
                 theta = j * 2 * np.pi / (i * self.grid.CELLS_PER_RING)
                 self.ax.plot([theta, theta], [i, i + 1], self.BG_COLOR)
 
-    def fill_cell(self, theta1, theta2, r,color):
+    def fill_cell(self, theta1, theta2, r, color):
         # plt.fill_between([cell.theta1, cell.theta2], [cell.level, cell.level + 1], color)
         self.ax.fill_between(
-            x=np.arange(theta1, theta2, self.RING_RES),
-            y1=r,
-            y2=r + 1,
-            color=color,
+            x=np.arange(theta1, theta2, self.RING_RES), y1=r, y2=r + 1, color=color,
         )
 
     def show(self):
