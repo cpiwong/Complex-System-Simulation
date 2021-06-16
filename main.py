@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 import random
 import copy
 from tqdm import tqdm
+import pandas as pd
 
+
+REGEN_TIME = 50
 
 def step(grid):
     for ring in grid.rings:
@@ -34,12 +37,12 @@ def propagation(grid):
             check = False
 
             for neighbour in neighbours:
-                if neighbour.current_age == 7:
+                if neighbour.current_age == REGEN_TIME:
 
                     # x is the formation probability, has to be determined yet
                     x = random.random()
-                    if x < 0.2:
-                        cell.next_age = 7
+                    if x < 1:
+                        cell.next_age = REGEN_TIME
                         check = True
 
                     break
@@ -69,9 +72,12 @@ for i in range(200):
         ring = random.choice(grid.rings)
         cell = random.choice(ring.children)
 
-    cell.current_age = 7
+    cell.current_age = REGEN_TIME
 
 dataclass = Scheduler(grid)
-dataclass.start(1, 10)
-print(dataclass.history)
+dataclass.start(1, 30)
 
+df = pd.DataFrame(dataclass.history.tolist())
+plotter = Visualise(grid)
+plotter.animate(df)
+#df.to_csv("test.csv")
