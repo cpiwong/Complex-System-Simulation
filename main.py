@@ -1,12 +1,14 @@
 from circulargrid import CircularGrid
+from scheduler import Scheduler
 from visualise import Visualise
 import matplotlib.pyplot as plt
 import random
 import copy
 from tqdm import tqdm
+import pandas as pd
 
-grid = CircularGrid(50, 20)
 
+REGEN_TIME = 50
 
 def step(grid):
     for ring in grid.rings:
@@ -19,33 +21,6 @@ def step(grid):
             cell.theta2 += offset
 
     return grid
-
-
-# def propagation(grid):
-#     temp_grid = copy.deepcopy(grid)
-
-#     for ring, temp_ring in zip(grid.rings, temp_grid.rings):
-#         for cell, temp_cell in zip(ring.children, temp_ring.children):
-#             cell_age = cell.current_age
-
-#             if cell_age > 0:
-#                 temp_cell.current_age -= 1
-#                 continue
-
-#             neighbours = grid.get_neighbours(cell)
-#             check = False
-
-#             for neighbour in neighbours:
-#                 if neighbour.current_age > 0:
-
-#                     # x is the formation probability, has to be determined yet
-#                     x = random.random()
-#                     if x < 0.1:
-#                         temp_cell.current_age = 7
-#                         check = True
-
-#                     break
-#     return temp_grid
 
 
 def propagation(grid):
@@ -62,12 +37,12 @@ def propagation(grid):
             check = False
 
             for neighbour in neighbours:
-                if neighbour.current_age > 0:
+                if neighbour.current_age == REGEN_TIME:
 
                     # x is the formation probability, has to be determined yet
                     x = random.random()
-                    if x < 0.1:
-                        cell.next_age = 7
+                    if x < 1:
+                        cell.next_age = REGEN_TIME
                         check = True
 
                     break
@@ -86,8 +61,10 @@ def updateGrid(grid):
     return grid
 
 
+grid = CircularGrid(50, 20, beforestep=propagation, step=step)
+
 # Initialize random stars first
-for i in range(10):
+for i in range(200):
     ring = random.choice(grid.rings)
     cell = random.choice(ring.children)
 
@@ -95,27 +72,12 @@ for i in range(10):
         ring = random.choice(grid.rings)
         cell = random.choice(ring.children)
 
-    cell.current_age = 7
+    cell.current_age = REGEN_TIME
 
+dataclass = Scheduler(grid)
+dataclass.start(1, 30)
 
-# Plot before 20 steps
+df = pd.DataFrame(dataclass.history.tolist())
 plotter = Visualise(grid)
-for ring in grid.rings:
-    for cell in ring.children:
-        if cell.current_age > 0:
-            plotter.fill_cell(cell, "b")
-
-# Propagate and rotate
-new_grid = grid
-for i in tqdm(range(100)):
-    temp_grid = propagation(new_grid)
-    new_grid = step(temp_grid)
-
-# Plot after 20 steps
-plotter = Visualise(new_grid)
-for ring in new_grid.rings:
-    for cell in ring.children:
-        if cell.current_age > 0:
-            plotter.fill_cell(cell, "b")
-
-plt.show()
+plotter.animate(df)
+#df.to_csv("test.csv")
