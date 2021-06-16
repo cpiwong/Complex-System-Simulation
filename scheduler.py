@@ -25,10 +25,11 @@ class Scheduler:
         for t in tqdm(np.arange(0, t_end, dt)):
             self.timestamp = t
             self.grid.announce_beforestep()
+            self.grid.announce_afterstep()
             self.grid.announce_step()
-
-            # self.iteration_callback()
-            self.history = np.concatenate((self.history, self.get_snapshot()), axis=None)
+            self.history = np.concatenate(
+                (self.history, self.get_snapshot()), axis=None
+            )
 
         return
 

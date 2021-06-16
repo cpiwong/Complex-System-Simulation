@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib.animation import FuncAnimation
 from tqdm import tqdm
 
-REGEN_TIME = 50
+REGEN_TIME = 20
 
 
 class Visualise:
@@ -32,16 +32,18 @@ class Visualise:
         self.ax.clear()
         self.ax.set_ylim([0, self.grid.NUM_OF_RINGS])
         for index, row in self.df[
-            (self.df.t == timestep) & (self.df.age == 50)
+            (self.df.t == timestep) & (self.df.age > 0)
         ].iterrows():
             age = row["age"]
             color = (
-                255 / REGEN_TIME * (REGEN_TIME - age),
-                255 / REGEN_TIME * (REGEN_TIME - age),
-                255 / REGEN_TIME * (REGEN_TIME - age),
+                round(255 / REGEN_TIME * (REGEN_TIME - age)),
+                round(255 / REGEN_TIME * (REGEN_TIME - age)),
+                round(255 / REGEN_TIME * (REGEN_TIME - age)),
+                1,
             )
-            # print(color)
-            self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], color)
+
+            test = (3, 3, 3)
+            self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], color="b")
 
     def animate(self, df):
         self.df = df
@@ -65,6 +67,7 @@ class Visualise:
 
     def fill_cell(self, theta1, theta2, r, color):
         # plt.fill_between([cell.theta1, cell.theta2], [cell.level, cell.level + 1], color)
+
         self.ax.fill_between(
             x=np.arange(theta1, theta2, self.RING_RES), y1=r, y2=r + 1, color=color,
         )

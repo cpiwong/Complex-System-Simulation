@@ -6,14 +6,18 @@ import random
 import copy
 from tqdm import tqdm
 import pandas as pd
+import numpy as np
 
+REGEN_TIME = 20
+PROPAGATION_PROBABILITY = 0.8
+MAX_RANDOM_STARS = 10
 
-REGEN_TIME = 50
 
 def step(grid):
     for ring in grid.rings:
         offset = ring.offset
-        offset += 1  # temporary
+        r = ring.id + 1
+        offset += 1 / r  # temporary
         ring.offset = offset
 
         for cell in ring.children:
@@ -31,19 +35,18 @@ def propagation(grid):
 
             if current_age > 0:
                 cell.next_age = current_age - 1
+
                 continue
 
             neighbours = grid.get_neighbours(cell)
-            check = False
 
             for neighbour in neighbours:
                 if neighbour.current_age == REGEN_TIME:
 
                     # x is the formation probability, has to be determined yet
                     x = random.random()
-                    if x < 1:
+                    if x < PROPAGATION_PROBABILITY:
                         cell.next_age = REGEN_TIME
-                        check = True
 
                     break
 
@@ -56,12 +59,26 @@ def updateGrid(grid):
     for ring in grid.rings:
         for cell in ring.children:
             cell.current_age = cell.next_age
-            cell.next_age = 0
 
     return grid
 
 
-grid = CircularGrid(50, 20, beforestep=propagation, step=step)
+def randomStars(grid):
+    rings = len(grid.rings)
+    number = random.randint(0, MAX_RANDOM_STARS)
+
+    for _ in range(number):
+
+        r = random.randint(0, rings) - 1
+
+        theta_max = len(grid.rings[r].children)
+        theta = random.randint(0, theta_max) - 1
+        grid.rings[r].children[theta].current_age = REGEN_TIME
+
+    return grid
+
+
+grid = CircularGrid(50, 20, beforestep=propagation, step=step, afterstep=randomStars)
 
 # Initialize random stars first
 for i in range(200):
@@ -75,9 +92,9 @@ for i in range(200):
     cell.current_age = REGEN_TIME
 
 dataclass = Scheduler(grid)
-dataclass.start(1, 30)
+dataclass.start(1, 100)
 
 df = pd.DataFrame(dataclass.history.tolist())
 plotter = Visualise(grid)
 plotter.animate(df)
-#df.to_csv("test.csv")
+# df.to_csv("test.csv")
