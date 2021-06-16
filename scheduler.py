@@ -1,5 +1,7 @@
+
 class Scheduler:
-    def __init___(self, grid, timestep=0, iteration_callback=None):
+
+    def __init___(grid, timestep=0, iteration_callback):
         """" Manages the timesteps on the circular grid
         Args:
             grid: the Circular grid object
@@ -12,18 +14,31 @@ class Scheduler:
         self.iteration_callback = iteration_callback
         self.started = False
 
-    def start(self):
+        self.history = []
+        selt.timestamp = 0
+
+
+    def start(self, dt, t_end):
         """ Starts the simulation """
-
-        # TODO implement function
+        
+        for t in np.arange(0, t_end, dt):
+            self.timestap = t
+            self.grid.announce_beforestep()
+            self.grid.announce_step
+            
+            self.iteration_callback()
+            history.append(self.get_snapshot())
+        
         return
-
-    def pause(self):
+    
+    def get_snapshot(self):
+        """" Returns a array of dictionaries with all the cell states"""
+        data = np.array([])
+        for cell in self.grid.children:
+            celldata = {"t", self.timestamp "id" : cell.id, "age": cell.age, "parent_ring": cell.parent.id, "theta1" : cell.theta1, "theta2" : cell.theta2}
+            data.append(celldata)
+        return data
+    def pause():
         """"Pauses the current simulation after finishing current iteration"""
         self.started = False
 
-    def __iteration_callback(self):
-        """ Internal callback function. Handles basic scheduler tasks before 
-            calling external callback
-        """
-        # TODO implement function
