@@ -2,7 +2,7 @@ import numpy as np
 
 
 class CircularGrid:
-    def __init__(self, NUM_OF_RINGS, CELLS_PER_RING):
+    def __init__(self, NUM_OF_RINGS, CELLS_PER_RING, beforestep=None, step=None):
 
         self.NUM_OF_RINGS = NUM_OF_RINGS  # total amount of rings in the plot
         self.CELLS_PER_RING = CELLS_PER_RING  # amount of cell for each ring, x cells are added for each ring
@@ -13,6 +13,27 @@ class CircularGrid:
         for i in range(self.NUM_OF_RINGS):
             new_ring = Ring(i, self)
             self.rings.append(new_ring)
+    
+    def announce_beforestep(self):
+        """" Call the beforestep function for every cell"""
+
+        # check if there is a beforestepfunction defined
+        if not self.beforestep:
+            return
+        for ring in self.rings:
+            for cell in ring.children:
+                self.beforestep(cell)
+
+    def announce_step(self):
+        """" Call the step function for every cell"""
+
+        # check if there is a beforestepfunction defined
+        if not self.step:
+            return
+        for ring in self.rings:
+            for cell in ring.children:
+                self.step(cell)
+
 
     def get_ring(self, ring_id):
         """ Returns a ring object for a given ring id"""
