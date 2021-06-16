@@ -75,7 +75,8 @@ class Cell:
 
         self.parent = parent_ring
         self.id = cell_id
-        self.age = age
+        self.current_age = age
+        self.next_age = 0
 
         self.level = self.parent.id + 1
         delta = 2 * np.pi / (self.level * self.parent.parent.CELLS_PER_RING)
