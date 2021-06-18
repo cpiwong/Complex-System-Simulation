@@ -65,8 +65,8 @@ class CircularGrid:
         if cell.parent.id > 0:
             for i in range(cell.id - self.CELLS_PER_RING, cell.id + 1):
                 guess = self.get_cell(cell.parent.id - 1, i)
-                if (guess.theta1 <= cell.theta1 and guess.theta2 > cell.theta1) or (
-                    guess.theta1 > cell.theta1 and guess.theta1 < cell.theta2
+                if (guess.theta1 <= cell.theta1 < guess.theta2) or (
+                        cell.theta1 < guess.theta1 < cell.theta2
                 ):
                     neighbours.append(guess)
 
@@ -78,8 +78,8 @@ class CircularGrid:
         if cell.parent.id + 1 < self.NUM_OF_RINGS:
             for i in range(cell.id, cell.id + 1 + self.CELLS_PER_RING):
                 guess = self.get_cell(cell.parent.id + 1, i)
-                if (guess.theta1 <= cell.theta1 and guess.theta2 > cell.theta1) or (
-                    guess.theta1 > cell.theta1 and guess.theta1 < cell.theta2
+                if (guess.theta1 <= cell.theta1 < guess.theta2) or (
+                        cell.theta1 < guess.theta1 < cell.theta2
                 ):
                     neighbours.append(guess)
         return neighbours
@@ -110,9 +110,15 @@ class Cell:
         self.next_age = 0
 
         self.level = self.parent.id + 1
-        delta = 2 * np.pi / (self.level * self.parent.parent.CELLS_PER_RING)
+        delta = 2 * np.pi / (float(self.level * self.parent.parent.CELLS_PER_RING))
         self.theta1 = self.id * delta
         self.theta2 = self.theta1 + delta
+
+    def get_theta1(self):
+        return self.theta1 + self.parent.offset
+
+    def get_theta2(self):
+        return self.theta2 + self.parent.offset
 
     def __repr__(self):
         return "<Cell id:%s parent_ring:%s>" % (self.id, self.parent.id)
