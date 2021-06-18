@@ -1,6 +1,6 @@
 import numpy as np
 
-def starFormationRate(df, regenTime):
+def starFormationRate(df, regenTime, initialisation):
     """" Returrns the amount of new formed stars per timestep"""
 
     frames = df["t"].max()

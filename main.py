@@ -1,4 +1,3 @@
-from scheduler import Scheduler
 from visualise import Visualise
 from model import Model
 from analyse import *
@@ -12,7 +11,7 @@ MAX_RANDOM_STARS = 10
 NUM_OF_RINGS = 50
 CELLS_PER_RING = 20
 TIMESTEP = 1
-SIMDURATION = 100
+SIMDURATION = 300
 
 model = Model(REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS)
 model.bind_grid(NUM_OF_RINGS, CELLS_PER_RING)
