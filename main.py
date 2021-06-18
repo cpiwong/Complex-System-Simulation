@@ -1,10 +1,9 @@
 from circulargrid import CircularGrid
 from scheduler import Scheduler
 from visualise import Visualise
+from analyse import *
 import matplotlib.pyplot as plt
 import random
-import copy
-from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
@@ -15,14 +14,10 @@ MAX_RANDOM_STARS = 10
 
 def step(grid):
     for ring in grid.rings:
-        offset = ring.offset
+        offset = np.longdouble(ring.offset)
         r = ring.id + 1
-        offset += 1 / r  # temporary
+        offset += 1 / np.longdouble(r)  # temporary
         ring.offset = offset
-
-        for cell in ring.children:
-            cell.theta1 += offset
-            cell.theta2 += offset
 
     return grid
 
@@ -78,7 +73,7 @@ def randomStars(grid):
     return grid
 
 
-grid = CircularGrid(50, 20, beforestep=propagation, step=step, afterstep=randomStars)
+grid = CircularGrid(50, 6, beforestep=propagation, step=step, afterstep=randomStars)
 
 # Initialize random stars first
 for i in range(200):
@@ -93,8 +88,14 @@ for i in range(200):
 
 dataclass = Scheduler(grid)
 dataclass.start(1, 100)
-
 df = pd.DataFrame(dataclass.history.tolist())
-plotter = Visualise(grid)
-plotter.animate(df)
+
+starsformed = starFormationRate(df, REGEN_TIME)
+plt.plot(range(len(starsformed)), starsformed)
+plt.title("Star formation per timestep")
+plt.xlabel("Frame")
+plt.ylabel("Stars formed")
+plt.show()
+#plotter = Visualise(grid)
+#plotter.animate(df)
 # df.to_csv("test.csv")

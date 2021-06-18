@@ -21,7 +21,7 @@ class Scheduler:
 
     def start(self, dt, t_end):
         """ Starts the simulation """
-
+        print("Starting simulation...")
         for t in tqdm(np.arange(0, t_end, dt)):
             self.timestamp = t
             self.grid.announce_beforestep()
@@ -43,8 +43,8 @@ class Scheduler:
                     "id": cell.id,
                     "age": cell.current_age,
                     "parent_ring": cell.parent.id,
-                    "theta1": cell.theta1,
-                    "theta2": cell.theta2,
+                    "theta1": cell.get_theta1(),
+                    "theta2": cell.get_theta2(),
                 }
                 data.append(celldata)
         return np.array(data)
