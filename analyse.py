@@ -15,11 +15,11 @@ def starFormationRate(df, regenTime):
 
 def convergenceCheck(starformation):
     """
-    Searches for the stable region
+    Searches for the stable region of s
     """
     windowsize = int(len(starformation) / 10)
 
-    starformation_reversed = list(np.flip(starformation))
+    starformation_reversed = list(np.flip(starformation - 10))
     converged = False
     amplitude = 50
     i = 0
@@ -33,7 +33,7 @@ def convergenceCheck(starformation):
         mean_second = np.array(temp_starformation_second).mean()
 
         if abs(mean_first - mean_second) > amplitude:
-            index = len(starformation) - (windowsize + i - 1)
+            index = len(starformation) - (i)
             converged = True
 
         if windowsize + i == len(starformation):

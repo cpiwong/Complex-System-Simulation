@@ -42,7 +42,11 @@ for propagation_probability in propagation_list:
 
     # Star formation rate
     starsformed = starFormationRate(df, REGEN_TIME)
-    mean_starformation_rate = starsformed.mean()
+    converged = convergenceCheck(starsformed)
+    mean_starformation_rate = converged.mean() - 10
+    print(converged)
+    if mean_starformation_rate < 0:
+        mean_starformation_rate = 0
     star_formation_rate.append(mean_starformation_rate)
 
 plt.plot(propagation_list, star_formation_rate)
