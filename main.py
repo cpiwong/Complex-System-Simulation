@@ -1,4 +1,3 @@
-from circulargrid import CircularGrid
 from scheduler import Scheduler
 from visualise import Visualise
 from model import Model
@@ -6,13 +5,14 @@ from analyse import *
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
-import numpy as np
 
 REGEN_TIME = 20
 PROPAGATION_PROBABILITY = 0.8
 MAX_RANDOM_STARS = 10
 NUM_OF_RINGS = 50
 CELLS_PER_RING = 20
+TIMESTEP = 1
+SIMDURATION = 100
 
 model = Model(REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS)
 model.bind_grid(NUM_OF_RINGS, CELLS_PER_RING)
@@ -29,9 +29,8 @@ for i in range(200):
 
     cell.current_age = REGEN_TIME
 
-dataclass = Scheduler(model.grid)
-dataclass.start(1, 100)
-df = pd.DataFrame(dataclass.history.tolist())
+model.scheduler.start(TIMESTEP, SIMDURATION)
+df = pd.DataFrame(model.scheduler.history.tolist())
 
 starsformed = starFormationRate(df, REGEN_TIME)
 plt.plot(range(len(starsformed)), starsformed)
