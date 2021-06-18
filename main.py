@@ -1,6 +1,7 @@
 from circulargrid import CircularGrid
 from scheduler import Scheduler
 from visualise import Visualise
+from model import Model
 from analyse import *
 import matplotlib.pyplot as plt
 import random
@@ -10,83 +11,25 @@ import numpy as np
 REGEN_TIME = 20
 PROPAGATION_PROBABILITY = 0.8
 MAX_RANDOM_STARS = 10
+NUM_OF_RINGS = 50
+CELLS_PER_RING = 20
 
-
-def step(grid):
-    for ring in grid.rings:
-        offset = np.longdouble(ring.offset)
-        r = ring.id + 1
-        offset += 1 / np.longdouble(r)  # temporary
-        ring.offset = offset
-
-    return grid
-
-
-def propagation(grid):
-
-    for ring in grid.rings:
-        for cell in ring.children:
-            current_age = cell.current_age
-
-            if current_age > 0:
-                cell.next_age = current_age - 1
-
-                continue
-
-            neighbours = grid.get_neighbours(cell)
-
-            for neighbour in neighbours:
-                if neighbour.current_age == REGEN_TIME:
-
-                    # x is the formation probability, has to be determined yet
-                    x = random.random()
-                    if x < PROPAGATION_PROBABILITY:
-                        cell.next_age = REGEN_TIME
-
-                    break
-
-    updated_grid = updateGrid(grid)
-
-    return updated_grid
-
-
-def updateGrid(grid):
-    for ring in grid.rings:
-        for cell in ring.children:
-            cell.current_age = cell.next_age
-
-    return grid
-
-
-def randomStars(grid):
-    rings = len(grid.rings)
-    number = random.randint(0, MAX_RANDOM_STARS)
-
-    for _ in range(number):
-
-        r = random.randint(0, rings) - 1
-
-        theta_max = len(grid.rings[r].children)
-        theta = random.randint(0, theta_max) - 1
-        grid.rings[r].children[theta].current_age = REGEN_TIME
-
-    return grid
-
-
-grid = CircularGrid(50, 6, beforestep=propagation, step=step, afterstep=randomStars)
+model = Model(REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS)
+model.bind_grid(NUM_OF_RINGS, CELLS_PER_RING)
+model.bind_scheduler()
 
 # Initialize random stars first
 for i in range(200):
-    ring = random.choice(grid.rings)
+    ring = random.choice(model.grid.rings)
     cell = random.choice(ring.children)
 
     while cell.current_age > 0:
-        ring = random.choice(grid.rings)
+        ring = random.choice(model.grid.rings)
         cell = random.choice(ring.children)
 
     cell.current_age = REGEN_TIME
 
-dataclass = Scheduler(grid)
+dataclass = Scheduler(model.grid)
 dataclass.start(1, 100)
 df = pd.DataFrame(dataclass.history.tolist())
 

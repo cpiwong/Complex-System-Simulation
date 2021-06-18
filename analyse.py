@@ -12,3 +12,4 @@ def starFormationRate(df, regenTime):
             formationRate[int(row["t"])] += 1
 
     return formationRate
+
