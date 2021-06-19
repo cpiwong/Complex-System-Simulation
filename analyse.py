@@ -18,8 +18,10 @@ def convergenceCheck(starformation):
     Searches for the stable region of s
     """
     windowsize = int(len(starformation) / 10)
+    if windowsize < 2:
+        windowsize = 2
 
-    starformation_reversed = list(np.flip(starformation - 10))
+    starformation_reversed = list(np.flip(starformation))
     converged = False
     amplitude = 50
     i = 0
@@ -30,6 +32,7 @@ def convergenceCheck(starformation):
         mean_first = np.array(temp_starformation_first).mean()
         i += 1
         temp_starformation_second = starformation_reversed[i : windowsize + i]
+
         mean_second = np.array(temp_starformation_second).mean()
 
         if abs(mean_first - mean_second) > amplitude:

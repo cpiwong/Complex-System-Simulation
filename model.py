@@ -5,16 +5,20 @@ import random
 
 
 class Model:
-
-    def __init__(self, REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS):
+    def __init__(
+        self, REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS, PROPAGATION_SPEED
+    ):
         self.REGEN_TIME = REGEN_TIME
         self.PROPAGATION_PROBABILITY = PROPAGATION_PROBABILITY
+        self.PROPAGATION_SPEED = PROPAGATION_SPEED
         self.MAX_RANDOM_STARS = MAX_RANDOM_STARS
         self.grid = None
         self.scheduler = None
 
     def bind_grid(self, num_of_rings, cells_per_ring):
-        self.grid = CircularGrid(num_of_rings, cells_per_ring, self.propagation, self.step, self.randomStars)
+        self.grid = CircularGrid(
+            num_of_rings, cells_per_ring, self.propagation, self.step, self.randomStars
+        )
 
     def bind_scheduler(self):
         if not self.grid:
@@ -45,7 +49,9 @@ class Model:
                 neighbours = grid.get_neighbours(cell)
 
                 for neighbour in neighbours:
-                    if neighbour.current_age == self.REGEN_TIME:
+                    if neighbour.current_age == (
+                        self.REGEN_TIME + 1 - self.PROPAGATION_SPEED
+                    ):
 
                         # x is the formation probability, has to be determined yet
                         x = random.random()
@@ -65,7 +71,7 @@ class Model:
 
         return grid
 
-    def randomStars(self,grid):
+    def randomStars(self, grid):
         rings = len(grid.rings)
         number = random.randint(0, self.MAX_RANDOM_STARS)
 
