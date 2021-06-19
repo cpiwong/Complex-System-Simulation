@@ -16,6 +16,7 @@ class Visualise:
         self.BG_COLOR = "lightgray"  # background color of cell borders
         self.FIG_SIZE = (15, 15)  # size of visualisation
         self.RING_RES = 0.001  # stepsize in radians of plot
+        self.MAX_COLOR_VALUE = None
 
         # basic pyplot settins
         self.fig = plt.figure(figsize=self.FIG_SIZE)
@@ -24,10 +25,10 @@ class Visualise:
         plt.axis("off")
         self.ax.set_ylim([0, grid.NUM_OF_RINGS])
         self.df = None
-
         # usefull variables that are used multiple times
         self.rads = np.arange(0, (2 * np.pi), self.RING_RES)
         self.constant = np.ones(len(self.rads))
+        self.cmap = plt.get_cmap("Blues")
 
     def update(self, timestep):
         self.ax.clear()
@@ -36,17 +37,14 @@ class Visualise:
             (self.df.t == timestep) & (self.df.age > 0)
         ].iterrows():
             age = row["age"]
-            color = (
-                round(255 / REGEN_TIME * (REGEN_TIME - age)),
-                round(255 / REGEN_TIME * (REGEN_TIME - age)),
-                round(255 / REGEN_TIME * (REGEN_TIME - age)),
-                1,
-            )
+            log_age = np.log(1 + age/self.MAX_COLOR_VALUE)
+            color = self.cmap(log_age)
             self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], color='b')
 
     def animate(self, df):
         self.df = df
         frames = df["t"].max()
+        self.MAX_COLOR_VALUE = df["age"].max()
         print("Rendering animation output...")
         ani = FuncAnimation(self.fig, self.update, frames=tqdm(range(frames), file=sys.stdout))
         ani.save("animation.gif", writer="PillowWriter", fps=10)

@@ -11,7 +11,7 @@ MAX_RANDOM_STARS = 10
 NUM_OF_RINGS = 50
 CELLS_PER_RING = 20
 TIMESTEP = 1
-SIMDURATION = 300
+SIMDURATION = 30
 
 model = Model(REGEN_TIME, PROPAGATION_PROBABILITY, MAX_RANDOM_STARS)
 model.bind_grid(NUM_OF_RINGS, CELLS_PER_RING)
@@ -32,11 +32,11 @@ model.scheduler.start(TIMESTEP, SIMDURATION)
 df = pd.DataFrame(model.scheduler.history.tolist())
 
 starsformed = starFormationRate(df, REGEN_TIME)
-plt.plot(range(len(starsformed)), starsformed)
-plt.title("Star formation per timestep")
-plt.xlabel("Frame")
-plt.ylabel("Stars formed")
-plt.show()
-#plotter = Visualise(grid)
-#plotter.animate(df)
+#plt.plot(range(len(starsformed)), starsformed)
+#plt.title("Star formation per timestep")
+#plt.xlabel("Frame")
+#plt.ylabel("Stars formed")
+#plt.show()
+plotter = Visualise(model.grid)
+plotter.animate(df)
 # df.to_csv("test.csv")
