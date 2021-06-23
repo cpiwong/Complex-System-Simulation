@@ -12,6 +12,7 @@ class CircularGrid:
         self.beforestep = beforestep
         self.step = step
         self.afterstep = afterstep
+        self.max_id = 0
 
         # create rings
         for i in range(self.NUM_OF_RINGS):
@@ -113,6 +114,8 @@ class Cell:
         delta = 2 * np.pi / (float(self.level * self.parent.parent.CELLS_PER_RING))
         self.theta1 = self.id * delta
         self.theta2 = self.theta1 + delta
+
+        self.unique_id = self.parent.parent.CELLS_PER_RING * self.parent.id + self.id
 
     def get_theta1(self):
         return self.theta1 + self.parent.offset
