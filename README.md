@@ -2,6 +2,8 @@
 
 ## Demo & introduction
 
+<img src="spiral.gif">
+
 ## Requirements
 
 This python code uses some common python packages. Make sure you install these or install with pip by running `pip install -r requirements.txt`
