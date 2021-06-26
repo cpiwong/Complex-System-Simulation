@@ -2,6 +2,8 @@
 
 ## Demo & introduction
 
+This project is a python implemtation of the self-propagating star formation model. It uses a circular grid where every disk rotates with a velocity of 1/r. This code is use to study under which propagation probabilities spiral formation takes place. 
+
 <img src="spiral.gif">
 
 ## Requirements
