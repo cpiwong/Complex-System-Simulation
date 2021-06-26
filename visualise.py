@@ -52,7 +52,7 @@ class Visualise:
             color = self.cmap(log_age)
             self.fill_cell(row["theta1"], row["theta2"], row["parent_ring"], color="b")
 
-    def animate(self, df) -> None:
+    def animate(self, df, probability) -> None:
         """
         Animates the dataframe for all timesteps in the dataframe df
         :param df: dataframe to animate
@@ -65,7 +65,7 @@ class Visualise:
         ani = FuncAnimation(
             self.fig, self.update, frames=tqdm(range(frames), file=sys.stdout)
         )
-        ani.save("animation.gif", writer="PillowWriter", fps=10)
+        ani.save(f"animation_{probability}.gif", writer="PillowWriter", fps=10)
 
     def print_grid(self) -> None:
         """
