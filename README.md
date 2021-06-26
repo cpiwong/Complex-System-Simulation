@@ -8,11 +8,13 @@ This python code uses some common python packages. Make sure you install these o
   
   * numy
   * matplotlib
+  * tqdm
+  * pandas
 
 ## Documentation
 
 To run a simulation you need to follow 3 steps:
-1: Create model
-2: Bind a grid to the model
-3: Bind a scheduler
+1. Create model
+2. Bind a grid to the model
+3. Bind a scheduler
 
