@@ -33,7 +33,7 @@ model.scheduler.start(TIMESTEP, SIMDURATION)
 df = pd.DataFrame(model.scheduler.history.tolist())
 ```
 
-To create a visualistion as the gif on the top of this reamde you can run
+To create a visualistion as the gif on the top of this readme you can run
 
 ```
 from visualise import Visualise
