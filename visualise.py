@@ -67,7 +67,7 @@ class Visualise:
         )
         ani.save("animation.gif", writer="PillowWriter", fps=10)
 
-    def print_grid(self):
+    def print_grid(self) -> None:
         """
         Shows the grid on the screen
         """
