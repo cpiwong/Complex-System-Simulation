@@ -40,3 +40,5 @@ from visualise import Visualise
 
 plotter = Visualise(model.grid)
 plotter.animate(df, probability)
+
+1. varying_prob.py
