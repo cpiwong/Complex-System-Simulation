@@ -40,5 +40,7 @@ from visualise import Visualise
 
 plotter = Visualise(model.grid)
 plotter.animate(df, probability)
-
-1. varying_prob.py
+```
+The next files produce our results from the presentation, but with changed parameters, otherwise it takes very long to run (1 day)
+```
+1. varying_prob.py simulates data and makes animatiions for probabilities 0.1, 0.2, ... , 0.6
