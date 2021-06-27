@@ -2,6 +2,15 @@ import numpy as np
 
 
 class CircularGrid:
+    """"
+    Creates grid object that holds ring objects. Allow to easily calculating the neighbours of the dynamic grid
+    by calling get neighbours
+    :param NUM_OF_RINGS: Number of rings that are in the grid
+    :param CELLS_PER_RING: Number of cells that are added in every new ring.
+    :param beforestep: Optional parameter, expects a function that will be called before handling every step
+    :param step: Optional parameter, expects a function that will be called during handling every step
+    :param afterstepstep: Optional parameter, expects a function that will be called after handling every step
+    """
     def __init__(
         self, NUM_OF_RINGS, CELLS_PER_RING, beforestep=None, step=None, afterstep=None
     ):
@@ -20,7 +29,7 @@ class CircularGrid:
             self.rings.append(new_ring)
 
     def announce_beforestep(self):
-        """" Call the beforestep function for every cell"""
+        """" Callback the beforestep function for every cell"""
 
         # check if there is a beforestepfunction defined
         if not self.beforestep:
@@ -29,7 +38,7 @@ class CircularGrid:
         self = self.beforestep(self)
 
     def announce_step(self):
-        """" Call the step function for every cell"""
+        """" Callback the step function for every cell"""
 
         # check if there is a beforestepfunction defined
         if not self.step:
@@ -87,6 +96,11 @@ class CircularGrid:
 
 
 class Ring:
+    """"
+    Ring objects that holds cells objects. Is used to order the cells in the grid object;
+    :param ring_id: The id. Should match the position in the grid. Ring closes to the center should have id 0
+    :param parent: Memory reference to the circular grid object.
+    """
     def __init__(self, ring_id, parent):
         self.id = ring_id
         self.parent = parent
@@ -94,15 +108,22 @@ class Ring:
         self.num_of_children = (ring_id + 1) * self.parent.CELLS_PER_RING
         self.offset = 0
 
+        # fill ring with grid cells
         for i in range(self.num_of_children):
             new_cell = Cell(self, i)
             self.children.append(new_cell)
 
     def __repr__(self):
+        """" Represent id instead of memory reference for easy debugging"""
         return "<Ring id:%s>" % (self.id)
 
 
 class Cell:
+    """"
+    Cells objects that holds all the necessary information about each grid cell
+    :param parent_ring: Memory reference to the ring object the cell belongs to.
+    :param cell id: A
+    """
     def __init__(self, parent_ring, cell_id, age=0):
 
         self.parent = parent_ring
@@ -113,15 +134,18 @@ class Cell:
         self.level = self.parent.id + 1
         delta = 2 * np.pi / (float(self.level * self.parent.parent.CELLS_PER_RING))
         self.theta1 = self.id * delta
-        self.theta2 = self.theta1 + delta
-
+        self.theta2 =  self.theta1 + delta
+        # create unique identifier. Useful when cells need to evaluated outside of the ring object.
         self.unique_id = self.parent.parent.CELLS_PER_RING * self.parent.id + self.id
 
     def get_theta1(self):
+        """"Returns the angle of polar coordinates of the start position"""
         return self.theta1 + self.parent.offset
 
     def get_theta2(self):
+        """"Returns the angle of polar coordinates of the end position"""
         return self.theta2 + self.parent.offset
 
     def __repr__(self):
+        """" Represent id instead of memory reference for easy debugging"""
         return "<Cell id:%s parent_ring:%s>" % (self.id, self.parent.id)
