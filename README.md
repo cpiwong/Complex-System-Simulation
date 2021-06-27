@@ -43,4 +43,6 @@ plotter.animate(df, probability)
 ```
 The next files produce our results from the presentation, but with changed parameters, otherwise it takes very long to run (1 day)
 ```
-1. varying_prob.py simulates data and makes animatiions for probabilities 0.1, 0.2, ... , 0.6
+1. varying_prob.py simulates data and makes animatiions for propagation probabilities 0.1, 0.2, ... , 0.6
+2. phaseplots.py creates the plots with average star formation rate vs propagation probability
+3. clusters.py creates the plots Average cluster size vs propagation probability, max cluster size vs probability and number of clusters vs probability
